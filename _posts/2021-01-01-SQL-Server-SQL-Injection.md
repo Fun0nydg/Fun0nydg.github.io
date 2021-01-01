@@ -63,7 +63,7 @@ https://payloads.online/archivers/2020-03-02/3#stuff%E4%B8%8Exml-path
 还有国外的一篇文章:
 https://www.sqlshack.com/for-xml-path-clause-in-sql-server/
 
-发现了可以用 FOR XML PATH将SQL语句返回的多列数据
+发现了可以用 FOR XML PATH将SQL语句返回的多行数据合并成单行  
 关于FOR XML PATH的文档：
 https://docs.microsoft.com/zh-cn/sql/relational-databases/xml/for-xml-sql-server?view=sql-server-ver15  
 

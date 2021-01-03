@@ -4,7 +4,7 @@ title:  "SQL-Server-SQL-Inject"
 ---
 ---
 ## 背景
-某次xx，遇到了一处SQL Server 的注入点，由于平时碰到的SQL Server数据库比较少，所以本文将详细讲解SQL Server的手工注入及其技巧。
+某次xx，遇到了一处SQL Server 的注入点，由于平时碰到的SQL Server数据库比较少，所以本文将记录SQL Server的手工注入及其技巧，以便查阅。
 
 ---
 

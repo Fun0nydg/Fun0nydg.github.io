@@ -97,7 +97,7 @@ SELECT  Name from Master..SysDatabases  FOR  XML PATH('')
 ```sql
 '['+name+'],'
 ```
-这种方式进行拼接，我这里为了减少payload长度，直接用 '，' 进行拼接:
+这种方式进行拼接，我这里为了减少payload长度，直接用 ','(逗号) 进行拼接:
 ```sql
 SELECT name+',' FROM(SELECT name from Master..SysDatabases) a  FOR  XML PATH('')
 ```

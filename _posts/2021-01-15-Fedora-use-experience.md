@@ -56,7 +56,7 @@ sudo chmod +x ./VMware-Workstation-Full-x.y.z-nn.x86_64.bundle
 ```bash
 sudo ./VMware-Workstation-Full-x.y.z-nn.x86_64.bundle
 ```
-当然这样安装肯定会出问题的，需要pacth，下载patch,找到对应的版本号
+当然这样安装肯定会出问题的，需要patch，下载patch,找到对应的版本号
 ```bash
 wget https://github.com/mkubecek/vmware-host-modules/archive/workstation-x.y.z.tar.gz
 ```

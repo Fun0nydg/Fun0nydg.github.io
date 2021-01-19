@@ -161,13 +161,12 @@ https://docs.docker.com/engine/install/fedora/
 什么？微信？想装在linux上？别执着于用Wine或者github的一些打包版本，听我的，用虚拟机就好...
 
 ### 010Editor
-在linux下效率很高，十分推荐的一款工具
-官网地址:
+在linux下效率很高，十分推荐,官网地址:
 ```html
 https://www.sweetscape.com/010editor/
 ```
 ### KeePassXC
-平常工作中我们会有很多帐号的密码，有些不是特别重要但是又需要一定的密码强度，这时候我们就需要一个密码管理工具了，KeePassXC  
+平常工作中我们会有很多帐号的密码，有些帐号可能不是特别重要但是又需要一定的密码强度，这时候我们就需要一个密码管理工具了，我推荐KeePassXC  
 dnf管理包中就有，直接可以安装:
 ```bash
 dnf install keepassxc

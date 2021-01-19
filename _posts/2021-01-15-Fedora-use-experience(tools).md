@@ -36,7 +36,7 @@ dnf search google-chrome*
 dnf install google-chrome-stable.x86_64
 ```
 
-#### Vmware
+### Vmware
  
 
 参考
@@ -74,7 +74,7 @@ sudo make install
 ```
 这时再运行就正常了
 
-#### 网易云
+### 网易云
 虽然网易云音乐只有deb包，但是没关系，我们有flatpak，当你遇到各种各样依赖问题的时候，flatpak安装软件是一个很好的解决方案，Fedora最新版默认是自带的，如果你的没有就去dnf安装一个,当然，这里面有好多是用户自己打包的，虽然flatpak会在沙箱里面运行，但是之前也有恶意的打包程序，我的推荐是，对于不支持rpm的，可以用flatpak，注意查看别人在github上的代码，多留个心眼
 flathub地址
 ```html
@@ -107,13 +107,13 @@ cloudmusic
 ```
 尽情享受音乐吧
 
-#### htop
+### htop
 top看起来很麻烦，不够直观，我们用htop
 ```bash
 dnf install htop
 ```
 
-#### vscode
+### vscode
 写代码一个vscode就足够
 参考官网
 ```html
@@ -130,7 +130,7 @@ sudo dnf check-update
 sudo dnf install code
 ```
 
-#### wps office
+### wps office
 虽然说windows版很多广告弹窗，但是linux版非常干净
 官网地址
 ```html
@@ -145,7 +145,7 @@ dnf install mesa-libGLU
 之后再去安装wps就ok
 
 
-#### Docker
+### Docker
 有时候搭建环境很麻烦，或者需要运一些不可靠的脚本，这时候docker可以很好解决这些顾虑，当然，docker也不是绝对安全的，也会有容器逃逸漏洞，
 这时候我们可以选择rootless脚本，这样不需要root权限去启动docker，同时不要用host模式，docker默认是bridge模式，具体关于docker的保护
 后续再说
@@ -157,18 +157,18 @@ https://docs.docker.com/engine/security/rootless/
 ```html
 https://docs.docker.com/engine/install/fedora/
 ```
-#### Wechat
-什么？微信？想装在linux上？少年，别执着于用Wine或者github的一些打包版本，听我的，用虚拟机就好...
+### Wechat
+什么？微信？想装在linux上？别执着于用Wine或者github的一些打包版本，听我的，用虚拟机就好...
 
-#### 010Editor
+### 010Editor
 在linux下效率很高，十分推荐的一款工具
 官网地址:
 ```html
 https://www.sweetscape.com/010editor/
 ```
-#### KeePassXC
-平常工作中我们会有很多帐号的密码，有些不是特别重要但是又需要一定的密码强度，这时候我们就需要一个密码管理工具了，KeePassXC
-dnf管理包中就有，直可以接用安装:
+### KeePassXC
+平常工作中我们会有很多帐号的密码，有些不是特别重要但是又需要一定的密码强度，这时候我们就需要一个密码管理工具了，KeePassXC  
+dnf管理包中就有，直接可以安装:
 ```bash
 dnf install keepassxc
 ```

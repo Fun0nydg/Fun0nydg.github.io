@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Fedora使用心得(踩坑指南)-持续更新"
+title:  "Fedora使用心得-工具篇"
 ---
 ---
 ## 前言
@@ -144,14 +144,38 @@ dnf install mesa-libGLU
 ```
 之后再去安装wps就ok
 
+
+#### Docker
+有时候搭建环境很麻烦，或者需要运一些不可靠的脚本，这时候docker可以很好解决这些顾虑，当然，docker也不是绝对安全的，也会有容器逃逸漏洞，
+这时候我们可以选择rootless脚本，这样不需要root权限去启动docker，同时不要用host模式，docker默认是bridge模式，具体关于docker的保护
+后续再说
+那么我们来通过rootless脚本去安装docker,根据官网的教程便可以安装:
+```html
+https://docs.docker.com/engine/security/rootless/
+```
+传统安装:
+```html
+https://docs.docker.com/engine/install/fedora/
+```
+#### Wechat
+什么？微信？想装在linux上？少年，别执着于用Wine或者github的一些打包版本，听我的，用虚拟机就好...
+
+#### 010Editor
+在linux下效率很高，十分推荐的一款工具
+官网地址:
+```html
+https://www.sweetscape.com/010editor/
+```
+#### KeePassXC
+平常工作中我们会有很多帐号的密码，有些不是特别重要但是又需要一定的密码强度，这时候我们就需要一个密码管理工具了，KeePassXC
+dnf管理包中就有，直可以接用安装:
+```bash
+dnf install keepassxc
+```
+
 未完代续
+
 
 
 ---
-## 故障排除
-未完代续
-
----
-## 使用技巧
-未完代续
 

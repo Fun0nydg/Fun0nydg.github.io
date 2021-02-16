@@ -113,7 +113,7 @@ top看起来很麻烦，不够直观，我们用htop
 dnf install htop
 ```
 
-### vscode
+### VSCode
 写代码一个vscode就足够
 参考官网
 ```html
@@ -130,14 +130,14 @@ sudo dnf check-update
 sudo dnf install code
 ```
 
-### wps office
+### WPS Office
 虽然说windows版很多广告弹窗，但是linux版非常干净
 官网地址
 ```html
 https://www.wps.cn/product/wpslinux
 ```
 选择x64 rpm包
-下载好rpm包安装会提示缺少依赖的
+下载好rpm包安装会提示缺少依赖,
 我们需要安装mesa-libGLU
 ```bash
 dnf install mesa-libGLU
@@ -148,7 +148,7 @@ dnf install mesa-libGLU
 ### Docker
 有时候搭建环境很麻烦，或者需要运一些不可靠的脚本，这时候docker可以很好解决这些顾虑，当然，docker也不是绝对安全的，也会有容器逃逸漏洞，
 这时候我们可以选择rootless脚本，这样不需要root权限去启动docker，同时不要用host模式，docker默认是bridge模式，具体关于docker的保护
-后续再说
+后续再说。   
 那么我们来通过rootless脚本去安装docker,根据官网的教程便可以安装:
 ```html
 https://docs.docker.com/engine/security/rootless/

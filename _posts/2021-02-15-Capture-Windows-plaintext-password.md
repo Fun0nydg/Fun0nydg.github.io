@@ -59,7 +59,7 @@ sekurlsa::logonPasswords full
 
 ---  
 ## 0x03 添加SSP获取明文凭据
-### 1.什么是SSP
+### **1.什么是SSP**
 参考：  
 https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)  
 
@@ -69,7 +69,7 @@ SSPI(Security Support Provider Interface),它是Windows身份验证的基础。�
 也就是说SSP会调用特定的身份认证协议，它会作为DLL并入到SSPI中。简单的说，SSP可以作为DLL，并且跟Windows身份认证有关。  
 
 ### 2.添加SSP
-#### 2.1调用AddSecurityPackage
+#### **2.1调用AddSecurityPackage**
 刚才我们提到，SSP可以作为DLL,那么我们把mimikatz中的mimilib.dll作为SSP，便可以从lsass中提取明文。  
 参考3gstudent的文章:  
 https://3gstudent.github.io/3gstudent.github.io/Mimikatz%E4%B8%ADSSP%E7%9A%84%E4%BD%BF%E7%94%A8/  

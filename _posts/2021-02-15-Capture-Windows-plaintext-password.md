@@ -13,7 +13,7 @@ title:  "Windows下获取本地用户明文密码的方法"
 但在实战中有时候我们无法获取到明文密码，大多是因为kb2871997的问题，那么接下来我们详细研究下kb2871997的原理以及该怎么去抓明文凭据。
 
 ---  
-## **0x01 kb2871997**
+## 0x01 kb2871997
 有关kb2871997补丁的说明，参考:
 <https://msrc-blog.microsoft.com/2014/06/05/an-overview-of-kb2871997/>  
 
@@ -53,12 +53,12 @@ sekurlsa::logonPasswords full
 我们可以看到，这时wdigest的明文也无法获取，我们只有hash。  
 
 ---
-## **0x02 抓取wdigest明文**
+## 0x02 抓取wdigest明文
 由于注册表项:  
 **HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**中的**UseLogonCredential**值为0，我们不能直接抓到wdigest明文，但我们可以用管理员权限将其设置为1，待重启之后，管理员重新登录，我们再用mimikatz便可以抓到wdigest明文，但这种方法并不是很好，如果没有**UseLogonCredential**，我们需要在注册表中额外添加，并且还需要重启服务器或者计算机，条件要求过于苛刻，故不采用此方法。  
 
 ---  
-## **0x03 添加SSP获取明文凭据**
+## 0x03 添加SSP获取明文凭据
 ### **1.什么是SSP**
 参考：  
 <https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)>  

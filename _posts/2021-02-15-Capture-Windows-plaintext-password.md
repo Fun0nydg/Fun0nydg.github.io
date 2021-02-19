@@ -31,8 +31,8 @@ title:  "Windows下获取本地用户明文密码的方法"
 中的**UseLogonCredential**值设置为0。接下来，我们在不打补丁的本地实验环境下抓取密码。  
 - 实验环境：Windows Server 2012  
 - 工具：mimikatz  
-在cmd中输入**systeminfo**查看补丁：  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-0.png)  <br>
+在cmd中输入**systeminfo**查看补丁:<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-0.png)<br><br>
 
 如图，未打补丁，直接使用mimikatz抓取:
 ```shell
@@ -40,17 +40,17 @@ privilege::debug
 sekurlsa::logonPasswords full
 ```
 如图，获取到了明文密码  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-1.png)  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-1.png)<br><br>
 
-接下来我们安装kb2871997，安装之后，在cmd中输入**systeminfo**查看补丁：  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-2.png)  <br>
+接下来我们安装kb2871997，安装之后，在cmd中输入**systeminfo**查看补丁：<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-2.png)<br><br>
 
-如图，已经安装好补丁,添加UseLogonCredential值，并设置为0  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-3.png)  <br>
+如图，已经安装好补丁,添加UseLogonCredential值，并设置为0<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-3.png)<br><br>
 
-继续使用mimikatz抓取,命令同上，如图:  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)  <br>
-我们可以看到，这时wdigest的明文也无法获取，我们只有hash。  
+继续使用mimikatz抓取,命令同上，如图:<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)<br><br>
+我们可以看到，这时wdigest的明文也无法获取，我们只有hash。<br><br> 
 
 ---
 ## 0x02 抓取wdigest明文
@@ -98,8 +98,8 @@ int main()
 ```powershell
 reg add "hklm\system\currentcontrolset\control\lsa\" /v "Security Packages" /d "kerberos\0msv1_0\0schannel\0wdigest\0tspkg\0pku2u\0mimilib" /t REG_MULTI_SZ
 ```
-完成以上两个步骤之后，运行编译好的程序，之后等到用户锁屏重新登录，我们便可以在c:\windows\system32\kiwissp.log中查看到明文密码:  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-6.png)  
+完成以上两个步骤之后，运行编译好的程序，之后等到用户锁屏重新登录，我们便可以在c:\windows\system32\kiwissp.log中查看到明文密码:<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-6.png)<br><br>
 
 这个方法的好处是不需要重启计算机便可以添加mimilib，但它并不是最好的方法，因为它需要修改注册表，SSP必须在lsass中注册，这样很容易被检测到。  
 
@@ -148,11 +148,11 @@ status = RpcStringBindingCompose(NULL,
 ```shell
 xxx.exe C:\Users\Administrator\Desktop\mimilib.dll
 ```
-xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路径，如图，添加成功:  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-1.png)  <br>
+xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路径，如图，添加成功:<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-1.png)<br><br>
 
-锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)  <br>
+锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)<br><br>
 
 ---
 ### 参考

@@ -3,7 +3,7 @@ layout: post
 title:  "Windows下获取本地用户明文密码的方法"
 ---
 ---  
-## **0x00 前言**
+## 0x00 前言
 在内网渗透中，获取明文密码对整个渗透过程起到很大的作用，当拿到明文密码之后我们可以:
 
 - 通过WMI、Psexec等去横向渗透
@@ -29,27 +29,27 @@ title:  "Windows下获取本地用户明文密码的方法"
 其次，添加了SID's (LOCAL_ACCOUNT,LOCAL_ACCOUNT_AND_MEMBER_OF_ADMINISTRATORS_GROUP)，主要是为了防止pth；  
 同时，还从lsass中删除了明文凭证，但不会删除WDigest,微软给出的建议是在注册表项:**HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**
 中的**UseLogonCredential**值设置为0。接下来，我们在不打补丁的本地实验环境下抓取密码。  
-实验环境：Windows Server 2012  
-工具：mimikatz  
-在cmd中输入**systeminfo**查看补丁：  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-0.png)  
+- 实验环境：Windows Server 2012  
+- 工具：mimikatz  
+在cmd中输入**systeminfo**查看补丁：  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-0.png)  <br>
 
 如图，未打补丁，直接使用mimikatz抓取:
 ```shell
 privilege::debug
 sekurlsa::logonPasswords full
 ```
-如图，获取到了明文密码  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-1.png)  
+如图，获取到了明文密码  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-1.png)  <br>
 
-接下来我们安装kb2871997，安装之后，在cmd中输入**systeminfo**查看补丁：  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-2.png)  
+接下来我们安装kb2871997，安装之后，在cmd中输入**systeminfo**查看补丁：  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-2.png)  <br>
 
-如图，已经安装好补丁,添加UseLogonCredential值，并设置为0  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-3.png)  
+如图，已经安装好补丁,添加UseLogonCredential值，并设置为0  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-3.png)  <br>
 
-继续使用mimikatz抓取,命令同上，如图:  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)  
+继续使用mimikatz抓取,命令同上，如图:  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)  <br>
 我们可以看到，这时wdigest的明文也无法获取，我们只有hash。  
 
 ---
@@ -148,11 +148,11 @@ status = RpcStringBindingCompose(NULL,
 ```shell
 xxx.exe C:\Users\Administrator\Desktop\mimilib.dll
 ```
-xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路径，如图，添加成功:  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-1.png)  
+xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路径，如图，添加成功:  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-1.png)  <br>
 
-锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:  
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)  
+锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:  <br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)  <br>
 
 ---
 ### 参考

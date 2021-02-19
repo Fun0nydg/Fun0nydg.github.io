@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Windows获取本地用户明文凭据的方法"
+title:  "Windows下获取本地用户明文密码的方法"
 ---
 ---  
 ## **0x00 前言**

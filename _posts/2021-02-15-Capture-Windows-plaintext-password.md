@@ -1,9 +1,9 @@
 ---
 layout: post
 title:  "Windows下获取本地用户明文密码的方法"
----
 ---  
 ## 0x00 前言
+---  
 在内网渗透中，获取明文密码对整个渗透过程起到很大的作用，当拿到明文密码之后我们可以:
 
 - 通过WMI、Psexec等去横向渗透
@@ -12,8 +12,8 @@ title:  "Windows下获取本地用户明文密码的方法"
 
 但在实战中有时候我们无法获取到明文密码，大多是因为kb2871997的问题，那么接下来我们详细研究下kb2871997的原理以及该怎么去抓明文凭据。
 
----  
 ## 0x01 kb2871997
+---  
 有关kb2871997补丁的说明，参考:
 <https://msrc-blog.microsoft.com/2014/06/05/an-overview-of-kb2871997/>  
 
@@ -52,13 +52,13 @@ sekurlsa::logonPasswords full
 ![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)<br><br>
 我们可以看到，这时wdigest的明文也无法获取，我们只有hash。<br><br> 
 
----
 ## 0x02 抓取wdigest明文
+---  
 由于注册表项:  
 **HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**中的**UseLogonCredential**值为0，我们不能直接抓到wdigest明文，但我们可以用管理员权限将其设置为1，待重启之后，管理员重新登录，我们再用mimikatz便可以抓到wdigest明文，但这种方法并不是很好，如果没有**UseLogonCredential**，我们需要在注册表中额外添加，并且还需要重启服务器或者计算机，条件要求过于苛刻，故不采用此方法。  
 
----  
 ## 0x03 添加SSP获取明文凭据
+---  
 ### **1.什么是SSP**
 参考：  
 <https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)>  
@@ -69,6 +69,7 @@ SSPI(Security Support Provider Interface),它是Windows身份验证的基础。�
 也就是说SSP会调用特定的身份认证协议，它会作为DLL并入到SSPI中。简单的说，SSP可以作为DLL，并且跟Windows身份认证有关。  
 
 ### **2.添加SSP**
+---  
 #### **2.1调用AddSecurityPackage**
 刚才我们提到，SSP可以作为DLL,那么我们把mimikatz中的mimilib.dll作为SSP，便可以从lsass中提取明文。  
 参考3gstudent的文章:  
@@ -154,12 +155,12 @@ xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路�
 锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:<br><br>
 ![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)<br><br>
 
----
 ### 参考
-- https://msrc-blog.microsoft.com/2014/06/05/an-overview-of-kb2871997/
-- https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)
-- https://3gstudent.github.io/3gstudent.github.io/Mimikatz%E4%B8%ADSSP%E7%9A%84%E4%BD%BF%E7%94%A8/
-- https://www.ired.team/offensive-security/credential-access-and-credential-dumping/intercepting-logon-credentials-via-custom-security-support-provider-and-authentication-package/
-- https://blog.xpnsec.com/exploring-mimikatz-part-2/
-- https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/#442-%E7%BB%95%E8%BF%87%E5%8D%A1%E5%B7%B4%E6%96%AF%E5%9F%BA%E6%8A%93lsass%E4%B8%AD%E7%9A%84%E5%AF%86%E7%A0%81
-- https://gist.github.com/xpn/c7f6d15bf15750eae3ec349e7ec2380e
+---  
+- <https://msrc-blog.microsoft.com/2014/06/05/an-overview-of-kb2871997/>
+- <https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)>
+- <https://3gstudent.github.io/3gstudent.github.io/Mimikatz%E4%B8%ADSSP%E7%9A%84%E4%BD%BF%E7%94%A8/>
+- <https://www.ired.team/offensive-security/credential-access-and-credential-dumping/intercepting-logon-credentials-via-custom-security-support-provider-and-authentication-package/>
+- <https://blog.xpnsec.com/exploring-mimikatz-part-2/>
+- <https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/#442-%E7%BB%95%E8%BF%87%E5%8D%A1%E5%B7%B4%E6%96%AF%E5%9F%BA%E6%8A%93lsass%E4%B8%AD%E7%9A%84%E5%AF%86%E7%A0%81>
+- <https://gist.github.com/xpn/c7f6d15bf15750eae3ec349e7ec2380e>

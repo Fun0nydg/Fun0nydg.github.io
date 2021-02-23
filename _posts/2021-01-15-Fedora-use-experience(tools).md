@@ -2,31 +2,25 @@
 layout: post
 title:  "Fedora使用心得-工具篇"
 ---
----
-## 前言
+## 前言 
 在去年10月份的时候，和一位前辈闲聊，聊到了保值技能，前辈建议我好好学习linux，熟练了linux不仅可以提高办公效率，而且也安全，更重要的是，你可以更好的去hack linux，于是，在前辈的推荐下，我将平时工作的操作系统换成了Fedora，开启了我的漫长踩坑之路
 
 
----
 ## 常用工具
 安装好Fedora后，你的系统的工具少的可怜...放眼望去，浏览器只有firefox，办公软件只有难用的libreoffice...
 所以，让我们开始完善我们的Fedora吧！当你搭建好了之后，有一种组装汽车的成就感～
 
 #### Chrome
 浏览器怎么能没有Chrome呢，毕竟谷歌大法好！
-参考:
-```html
-https://docs.fedoraproject.org/en-US/quick-docs/installing-chromium-or-google-chrome-browsers/
-```
+参考:  
+<https://docs.fedoraproject.org/en-US/quick-docs/installing-chromium-or-google-chrome-browsers/>  
 
 你可以选择安装chromium,dnf package自带
 ```bash
 dnf install chromium
 ```
-当然我没有安他，毕竟有时候还是要娱乐一下，看一看视频，这时候chromium就不行了，涉及到国外的一些开源许可以及法律法规，这时候我们就需要安装Chrome了，默认dnf package是没有的，我们需要前往
-```html
-https://www.google.com/chrome/browser/desktop/index.html 
-```
+当然我没有安他，毕竟有时候还是要娱乐一下，看一看视频，这时候chromium就不行了，涉及到国外的一些开源许可以及法律法规，这时候我们就需要安装Chrome了，默认dnf package是没有的，我们需要前往  
+<https://www.google.com/chrome/browser/desktop/index.html>  
 选择rpm包下载，安装好rpm包后先去寻找有哪些版本:
 ```bash
 dnf search google-chrome*
@@ -37,13 +31,9 @@ dnf install google-chrome-stable.x86_64
 ```
 
 ### Vmware
- 
-
-参考
-```html
-https://docs.fedoraproject.org/en-US/quick-docs/how-to-use-vmware/
-https://ericclose.github.io/install-VMware-Workstation-on-Fedora-30.html
-```
+参考   
+<https://docs.fedoraproject.org/en-US/quick-docs/how-to-use-vmware/>  
+<https://ericclose.github.io/install-VMware-Workstation-on-Fedora-30.html>  
 安装前的准备，确保make成功，切记！
 ```bash
 sudo dnf install kernel-devel kernel-headers gcc gcc-c++ make git
@@ -85,8 +75,7 @@ https://flathub.org/
 flatpak install flathub com.netease.CloudMusic
 ```
 
-运行
-注意，这里会有输入法的问题，如果直接运行你可能输入不了中文，解决方法带个env参数，默认的输入法是ibus:
+运行的时候注意，这里会有输入法的问题，如果直接运行你可能输入不了中文，解决方法带个env参数，默认的输入法是ibus:
 
 ```bash
 flatpak run --env=QT_IM_MODULE=ibus com.netease.CloudMusic
@@ -114,7 +103,6 @@ dnf install htop
 ```
 
 ### VSCode
-写代码一个vscode就足够
 参考官网
 ```html
 https://code.visualstudio.com/docs/setup/linux
@@ -131,13 +119,10 @@ sudo dnf install code
 ```
 
 ### WPS Office
-虽然说windows版很多广告弹窗，但是linux版非常干净
-官网地址
-```html
-https://www.wps.cn/product/wpslinux
-```
-选择x64 rpm包
-下载好rpm包安装会提示缺少依赖,
+虽然说windows版很多广告弹窗，但是linux版非常干净，官网地址：  
+<https://www.wps.cn/product/wpslinux>  
+选择```x64```的rpm包
+下载好rpm包安装会提示缺少依赖的
 我们需要安装mesa-libGLU
 ```bash
 dnf install mesa-libGLU
@@ -148,23 +133,17 @@ dnf install mesa-libGLU
 ### Docker
 有时候搭建环境很麻烦，或者需要运一些不可靠的脚本，这时候docker可以很好解决这些顾虑，当然，docker也不是绝对安全的，也会有容器逃逸漏洞，
 这时候我们可以选择rootless脚本，这样不需要root权限去启动docker，同时不要用host模式，docker默认是bridge模式，具体关于docker的保护
-后续再说。   
-那么我们来通过rootless脚本去安装docker,根据官网的教程便可以安装:
-```html
-https://docs.docker.com/engine/security/rootless/
-```
-传统安装:
-```html
-https://docs.docker.com/engine/install/fedora/
-```
+后续再说
+那么我们来通过rootless脚本去安装docker,根据官网的教程便可以安装:  
+<https://docs.docker.com/engine/security/rootless/>  
+传统安装:  
+<https://docs.docker.com/engine/install/fedora/>    
 ### Wechat
 什么？微信？想装在linux上？别执着于用Wine或者github的一些打包版本，听我的，用虚拟机就好...
 
 ### 010Editor
-在linux下效率很高，十分推荐,官网地址:
-```html
-https://www.sweetscape.com/010editor/
-```
+在linux下效率很高，十分推荐,官网地址:  
+<https://www.sweetscape.com/010editor/>  
 ### KeePassXC
 平常工作中我们会有很多帐号的密码，有些帐号可能不是特别重要但是又需要一定的密码强度，这时候我们就需要一个密码管理工具了，我推荐KeePassXC  
 dnf管理包中就有，直接可以安装:
@@ -176,5 +155,4 @@ dnf install keepassxc
 
 
 
----
 

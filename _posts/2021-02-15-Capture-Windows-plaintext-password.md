@@ -3,7 +3,6 @@ layout: post
 title:  "Windows下获取本地用户明文密码的方法"
 ---  
 ## 0x00 前言
----  
 在内网渗透中，获取明文密码对整个渗透过程起到很大的作用，当拿到明文密码之后我们可以:
 
 - 通过WMI、Psexec等去横向渗透
@@ -13,11 +12,10 @@ title:  "Windows下获取本地用户明文密码的方法"
 但在实战中有时候我们无法获取到明文密码，大多是因为kb2871997的问题，那么接下来我们详细研究下kb2871997的原理以及该怎么去抓明文凭据。
 
 ## 0x01 kb2871997
----  
-有关kb2871997补丁的说明，参考:
+有关kb2871997补丁的说明，参考:  
 <https://msrc-blog.microsoft.com/2014/06/05/an-overview-of-kb2871997/>  
 
-文章中提到，kb2871997补丁主要针对 Windows 7和Windows Server 2008 R2之后的系统，kb2871997主要解决了三个问题：
+文章中提到，kb2871997补丁主要针对Windows 7和Windows Server 2008 R2之后的系统，kb2871997主要解决了三个问题：
 
 - 支持Protected Users组
 - 远程桌面连接支持Restricted Admin模式
@@ -25,14 +23,17 @@ title:  "Windows下获取本地用户明文密码的方法"
 
 第一点主要增加了Protected User组，如果用户的帐号是该组的成员，那么用户必须使用Kerberos协议登录，并且Kerberos协议的加密方式不再是DES或RC4，强制使用AES加密。   
 第二点主要是增加了Restricted Admin模式。   
-第三点中，微软会在用户注销后会删除凭证信息，这样在用户注销后就获取不到明文密码、NTLM hash、TGT/Session key等信息；   
-其次，添加了SID's (LOCAL_ACCOUNT,LOCAL_ACCOUNT_AND_MEMBER_OF_ADMINISTRATORS_GROUP)，主要是为了防止pth；  
-同时，还从lsass中删除了明文凭证，但不会删除WDigest,微软给出的建议是在注册表项:**HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**
-中的**UseLogonCredential**值设置为0。接下来，我们在不打补丁的本地实验环境下抓取密码。  
+第三点中，Windows会在用户注销后会删除凭证信息，这样在用户注销后就获取不到明文密码、NTLM hash、TGT/Session key等信息；   
+其次，添加了  
+```SID's (LOCAL_ACCOUNT,LOCAL_ACCOUNT_AND_MEMBER_OF_ADMINISTRATORS_GROUP)```，
+主要是为了防止pth；同时，还从lsass中删除了明文凭证，但不会删除WDigest,微软给出的建议是在注册表项:
+***HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest***  
+中的UseLogonCredential值设置为0。接下来，我们在不打补丁的本地实验环境下抓取密码。  
 - 实验环境：Windows Server 2012  
 - 工具：mimikatz  
-在cmd中输入**systeminfo**查看补丁:<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-0.png)<br><br>
+
+在cmd中输入**systeminfo**查看补丁:<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-0.png)<br>
 
 如图，未打补丁，直接使用mimikatz抓取:
 ```shell
@@ -40,25 +41,23 @@ privilege::debug
 sekurlsa::logonPasswords full
 ```
 如图，获取到了明文密码  <br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-1.png)<br><br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-1.png)<br>
 
-接下来我们安装kb2871997，安装之后，在cmd中输入**systeminfo**查看补丁：<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-2.png)<br><br>
+接下来我们安装kb2871997，安装之后，在cmd中输入**systeminfo**查看补丁：<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-2.png)<br>
 
-如图，已经安装好补丁,添加UseLogonCredential值，并设置为0<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-3.png)<br><br>
+如图，已经安装好补丁,添加UseLogonCredential值，并设置为0<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-3.png)<br>
 
-继续使用mimikatz抓取,命令同上，如图:<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)<br><br>
-我们可以看到，这时wdigest的明文也无法获取，我们只有hash。<br><br> 
+继续使用mimikatz抓取,命令同上，如图:<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-5.png)<br>
+我们可以看到，这时wdigest的明文也无法获取，我们只有hash。<br> 
 
 ## 0x02 抓取wdigest明文
----  
 由于注册表项:  
-**HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**中的**UseLogonCredential**值为0，我们不能直接抓到wdigest明文，但我们可以用管理员权限将其设置为1，待重启之后，管理员重新登录，我们再用mimikatz便可以抓到wdigest明文，但这种方法并不是很好，如果没有**UseLogonCredential**，我们需要在注册表中额外添加，并且还需要重启服务器或者计算机，条件要求过于苛刻，故不采用此方法。  
+***HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest***中的UseLogonCredential值为0，我们不能直接抓到wdigest明文，但我们可以用管理员权限将其设置为1，待重启之后，管理员重新登录，我们再用mimikatz便可以抓到wdigest明文，但这种方法并不是很好，如果没有UseLogonCredential，我们需要在注册表中额外添加，并且还需要重启服务器或者计算机，条件要求过于苛刻，故不采用此方法。  
 
 ## 0x03 添加SSP获取明文凭据
----  
 ### **1.什么是SSP**
 参考：  
 <https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)>  
@@ -68,9 +67,8 @@ SSPI(Security Support Provider Interface),它是Windows身份验证的基础。�
 
 也就是说SSP会调用特定的身份认证协议，它会作为DLL并入到SSPI中。简单的说，SSP可以作为DLL，并且跟Windows身份认证有关。  
 
-### **2.添加SSP**
----  
-#### **2.1调用AddSecurityPackage**
+### 2.添加SSP
+#### 2.1调用AddSecurityPackage
 刚才我们提到，SSP可以作为DLL,那么我们把mimikatz中的mimilib.dll作为SSP，便可以从lsass中提取明文。  
 参考3gstudent的文章:  
 <https://3gstudent.github.io/3gstudent.github.io/Mimikatz%E4%B8%ADSSP%E7%9A%84%E4%BD%BF%E7%94%A8/>  
@@ -99,12 +97,12 @@ int main()
 ```powershell
 reg add "hklm\system\currentcontrolset\control\lsa\" /v "Security Packages" /d "kerberos\0msv1_0\0schannel\0wdigest\0tspkg\0pku2u\0mimilib" /t REG_MULTI_SZ
 ```
-完成以上两个步骤之后，运行编译好的程序，之后等到用户锁屏重新登录，我们便可以在c:\windows\system32\kiwissp.log中查看到明文密码:<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-6.png)<br><br>
+完成以上两个步骤之后，运行编译好的程序，之后等到用户锁屏重新登录，我们便可以在c:\windows\system32\kiwissp.log中查看到明文密码:<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/1-6.png)<br>
 
 这个方法的好处是不需要重启计算机便可以添加mimilib，但它并不是最好的方法，因为它需要修改注册表，SSP必须在lsass中注册，这样很容易被检测到。  
 
-#### **2.2通过RPC调用添加SSP**
+#### 2.2通过RPC调用添加SSP
 在学习了国外大佬XPN的博客  
 <https://blog.xpnsec.com/exploring-mimikatz-part-2/>  
 发现用RPC去调用添加SSP会更好，整个过程有较少的敏感行为，可以规避杀软的检测，当然，添加的dll肯定不能用mimilib，我们需要自己生成一个，参考奇安信A-TEAM的文章:  
@@ -123,11 +121,15 @@ reg add "hklm\system\currentcontrolset\control\lsa\" /v "Security Packages" /d "
 ```cpp
 unsigned char* pszStringBinding = NULL;
 ```
+
 修改为
+
 ```cpp
 RPC_WSTR pszStringBinding = NULL;
 ```
+
 将
+
 ```cpp
 status = RpcStringBindingCompose(NULL,
 		(unsigned char*)"ncalrpc",
@@ -136,7 +138,9 @@ status = RpcStringBindingCompose(NULL,
 		NULL,
 		&pszStringBinding);
 ```
+
 修改为
+
 ```cpp
 status = RpcStringBindingCompose(NULL,
 		(RPC_WSTR)L"ncalrpc",
@@ -145,18 +149,20 @@ status = RpcStringBindingCompose(NULL,
 		NULL,
 		&pszStringBinding);
 ```
+
 修改好后编译生成即可。放到我们的实验环境下，在cmd中运行:
+
 ```shell
 xxx.exe C:\Users\Administrator\Desktop\mimilib.dll
-```
-xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路径，如图，添加成功:<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-1.png)<br><br>
+```  
 
-锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:<br><br>
-![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)<br><br>
+xxx.exe是我们刚刚生成用于添加SSP的exe，这里dll需要写绝对路径，如图，添加成功:<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-1.png)<br>
+
+锁屏之后重新登录，我们发现在c:\windows\system32\kiwissp.log中记录了明文密码:<br>
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-02-15/3-2.png)<br>
 
 ### 参考
----  
 - <https://msrc-blog.microsoft.com/2014/06/05/an-overview-of-kb2871997/>
 - <https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn751052(v=ws.11)>
 - <https://3gstudent.github.io/3gstudent.github.io/Mimikatz%E4%B8%ADSSP%E7%9A%84%E4%BD%BF%E7%94%A8/>

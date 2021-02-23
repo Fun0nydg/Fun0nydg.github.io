@@ -1,6 +1,6 @@
 ---
 layout: page
-title: About
-permalink: /about/
+title: 关于我
 ---
-个人随笔
+
+这个人很懒，什么都没写...

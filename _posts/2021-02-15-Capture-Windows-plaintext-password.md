@@ -21,12 +21,12 @@ title:  "Windows下获取本地用户明文密码的方法"
 - 远程桌面连接支持Restricted Admin模式
 - 清除LSA凭证和一些其他变化
 
-第一点主要增加了Protected User组，如果用户的帐号是该组的成员，那么用户必须使用Kerberos协议登录，并且Kerberos协议的加密方式不再是DES或RC4，强制使用AES加密。   
+第一点主要增加了Protected User组，如果用户的帐号是该组的成员，那么用户必须使用Kerberos协议登录，并且Kerberos协议的加密方式不再是DES或RC4，强制使用AES加密，当用户加入Protected Users组之后，默认是抓不到hash，。   
 第二点主要是增加了Restricted Admin模式。   
-第三点中，Windows会在用户注销后会删除凭证信息，这样在用户注销后就获取不到明文密码、NTLM hash、TGT/Session key等信息；   
+第三点中，明文凭据将不被存储，但是NT hash、TGT/Session key 还会被存储；
 其次，添加了  
 ```SID's (LOCAL_ACCOUNT,LOCAL_ACCOUNT_AND_MEMBER_OF_ADMINISTRATORS_GROUP)```，
-主要是为了防止pth；同时，还从lsass中删除了明文凭证，但不会删除WDigest,微软给出的建议是在注册表项:
+同时，还从lsass中删除了明文凭证，但不会删除WDigest,微软给出的建议是在注册表项:
 ***HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest***  
 中的UseLogonCredential值设置为0。接下来，我们在不打补丁的本地实验环境下抓取密码。  
 - 实验环境：Windows Server 2012  

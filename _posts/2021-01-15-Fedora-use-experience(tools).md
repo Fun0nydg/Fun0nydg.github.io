@@ -139,7 +139,15 @@ dnf install mesa-libGLU
 传统安装:  
 <https://docs.docker.com/engine/install/fedora/>    
 ### Wechat
-什么？微信？想装在linux上？别执着于用Wine或者github的一些打包版本，听我的，用虚拟机就好...
+虽然说微信可以网页版登录，但是有不少用户出于安全策略都无法登录，比如说我...为了寻找解决方法，我在github上搜到了一个docker微信：  
+<https://github.com/huan/docker-wechat>  
+**如果说不担心被封号的同学，可以尝试docker微信，由于我自己没有使用过，所以不敢保证其稳定性**，我的解决方法是用一个Windows虚拟机装一个微信，虽然麻烦，但是比较稳定。  
+
+### tmux
+```bash
+dnf install tmux
+```
+不用多说，神器。
 
 ### 010Editor
 在linux下效率很高，十分推荐,官网地址:  

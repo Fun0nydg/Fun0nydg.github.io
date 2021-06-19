@@ -15,7 +15,7 @@ The Docker client and daemon can run on the same system, or you can connect a Do
 to a remote Docker daemon. The Docker client and daemon communicate using a REST API, 
 over UNIX sockets or a network interface. Another Docker client is Docker Compose, that lets you work with applications consisting of a set of containers.
 ```
-![avatar](https://mmbiz.qpic.cn/mmbiz_png/6AoQM3RKCWV8FEoDN9vyS6icOwQgQzJBgLyAJ3nicORia2P12usYVniayav4nGdPE6vibiaXAY16GdS97mEDBXfhN6vQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)  
+![avatar](https://raw.githubusercontent.com/Fun0nydg/blogpic/main/2021-05-28/docker.png)  
 图片参考[host模式容器逃逸漏洞（CVE-2020-15257）技术分析](https://mp.weixin.qq.com/s/WmSaLPnG4o4Co1xRiYCOnQ)
 客户端为docker client，它使用REST API 通过UNIX 套接字或网络接口与Docker daemon进行交互，完成对容器的大部分操作。  
 其中，docker对容器的管理和操作基本都是通过containerd完成的，containerd它向上为Docker Daemon提供了gRPC接口，向下通过containerd-shim结合runC，实现对容器的管理控制，其中每一个容器都对应着一个containerd-shim进程  

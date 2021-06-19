@@ -85,3 +85,9 @@ ubuntu1@123:~$ sudo cat /var/spool/cron/crontabs/root
 * * * * * echo AAAt >> /tmp/root1.txt
 ```
 可以看到，已经成功写入并不受缓存影响。
+
+# 0x03 参考
+- https://security.tencent.com/index.php/blog/msg/183
+- https://github.com/tsarpaul/pagecache-management/blob/master/fadv.c
+- https://www.intezer.com/blog/cloud-security/royal-flush-privilege-escalation-vulnerability-in-azure-functions/
+- https://man.archlinux.org/man/debugfs.8.en

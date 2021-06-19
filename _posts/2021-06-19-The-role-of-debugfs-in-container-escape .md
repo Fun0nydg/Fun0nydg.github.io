@@ -16,7 +16,7 @@ write source_file out_file
     Copy the contents of source_file into a newly-created file in the filesystem named out_file.
 ```
 通过`write`命令我们可以将容器中的文件复制到宿主机中。
-演示：
+演示： 
 实验环境：特权ubuntu容器  
 ```shell
 #在容器的bash中
@@ -86,7 +86,7 @@ ubuntu1@123:~$ sudo cat /var/spool/cron/crontabs/root
 ```
 可以看到，已经成功写入并不受缓存影响。
 
-# 0x03 参考
+## 0x03 参考
 - https://security.tencent.com/index.php/blog/msg/183
 - https://github.com/tsarpaul/pagecache-management/blob/master/fadv.c
 - https://www.intezer.com/blog/cloud-security/royal-flush-privilege-escalation-vulnerability-in-azure-functions/

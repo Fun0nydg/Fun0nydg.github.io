@@ -15,8 +15,8 @@ write:
 write source_file out_file
     Copy the contents of source_file into a newly-created file in the filesystem named out_file.
 ```
-通过`write`命令我们可以将容器中的文件复制到宿主机中。
-演示： 
+通过`write`命令我们可以将容器中的文件复制到宿主机中。  
+演示:  
 实验环境：特权ubuntu容器  
 ```console
 #在容器的bash中
